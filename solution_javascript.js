@@ -5,12 +5,10 @@ class EventSourcer {
     this.backward = [];
     this.ur = 0;
   }
-
   add(num) {
     this.value += num;
     this.forward.push(`add ${num}`);
   }
-
   subtract(num) {
     if (this.value > 0) {
       this.value -= num;
@@ -19,6 +17,8 @@ class EventSourcer {
   }
   undo() {
     let last_event = this.forward.pop();
+
+    // parse out number if applicable
     let tmp = last_event.split(" ");
     let num = parseInt(tmp[1]);
 
@@ -37,9 +37,11 @@ class EventSourcer {
   }
   redo() {
     let last_event = this.backward.pop();
+
+    // parse out number if applicable
     let tmp = last_event.split(" ");
     let num = parseInt(tmp[1]);
-    
+
     if (this.ur === 0) { // redo what is undone
       if ("add" in last_event) {
         this.value += num;
