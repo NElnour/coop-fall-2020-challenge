@@ -10,10 +10,8 @@ class EventSourcer {
     this.forward.push(`add ${num}`);
   }
   subtract(num) {
-    if (this.value > 0) {
-      this.value -= num;
-      this.forward.push(`subtract ${num}`);
-    }
+    this.value -= num;
+    this.forward.push(`subtract ${num}`);
   }
   undo() {
     let last_event = this.forward.pop();
