@@ -1,7 +1,7 @@
 class EventSourcer {
   constructor() {
     this.value = 0;
-    this.forawrd = [];
+    this.forward = [];
     this.backward = [];
     this.ur = 0;
   }
@@ -14,42 +14,46 @@ class EventSourcer {
     this.forward.push(`subtract ${num}`);
   }
   undo() {
-    let last_event = this.forward.pop();
+    if (this.forward.length > 0) {
+      let last_event = this.forward.pop();
 
-    // parse out number if applicable
-    let tmp = last_event.split(" ");
-    let num = parseInt(tmp[1]);
+      // parse out number if applicable
+      let tmp = last_event.split(" ");
+      let num = parseInt(tmp[1]);
 
-    if (this.ur === 0) { // undo addition/subtraction
-      if ("add" in last_event) {
-        this.value -= num;
-        this.backward.push(last_event);
-      } else if ("subract" in last_event) {
-        this.value += num;
-        this.backward.push(last_event);
+      if (this.ur === 0) { // undo addition/subtraction
+        if (last_event.includes("add")) {
+          this.value -= num;
+          this.backward.push(last_event);
+        } else if (last_event.includes("subtract")) {
+          this.value += num;
+          this.backward.push(last_event);
+        }
+      } else { // undo the redo
+        this.undo();
       }
-    } else { // undo the redo
-      this.undo();
+      this.ur = 0; //set flag that undo is active
     }
-    this.ur = 0; //set flag that undo is active
   }
   redo() {
-    let last_event = this.backward.pop();
+    if (this.backward.length > 0) {
+      let last_event = this.backward.pop();
 
-    // parse out number if applicable
-    let tmp = last_event.split(" ");
-    let num = parseInt(tmp[1]);
+      // parse out number if applicable
+      let tmp = last_event.split(" ");
+      let num = parseInt(tmp[1]);
 
-    if (this.ur === 0) { // redo what is undone
-      if ("add" in last_event) {
-        this.value += num;
-        this.forward.push(last_event);
-      } else if ("subract" in last_event) {
-        this.value -= num;
-        this.forward.push(last_event);
+      if (this.ur === 0) { // redo what is undone
+        if (last_event.includes("add")) {
+          this.value += num;
+          this.forward.push(last_event);
+        } else if (last_event.includes("subtract")) {
+          this.value -= num;
+          this.forward.push(last_event);
+        }
       }
+      this.ur = 1; //set flag that redo is active
     }
-    this.ur = 1; //set flag that redo is active
   }
   bulk_undo(num) {
     if (num < this.forward.length) { // ensure bulk undos is fewer than supported
