@@ -56,18 +56,12 @@ class EventSourcer {
     }
   }
   bulk_undo(num) {
-    if (num < this.forward.length) { // ensure bulk undos is fewer than supported
-      for (let index = 0; index < num; index++) {
-        this.undo();
-      }
-    } else {
-      for (let index = 0; index < this.forward.length; index++) {
-        this.undo();
-      }
+    for (let index = 0; index < num; index++) {
+      this.undo();
     }
   }
   bulk_redo(num) {
-    if (num < this.backward.length) { // ensure bulk uredos is fewer than supported
+    if (num < this.backward.length) { // ensure bulk redos is fewer than supported
       for (let index = 0; index < num; index++) {
         this.redo();
       }

@@ -8,7 +8,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "serve": "node solution_javascript.js"
   },
   "author": "Applyboard",
   "license": "ISC"
